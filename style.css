@@ -52,6 +52,7 @@
 .arrow {
   max-width: 800px;
   position: absolute;
+  z-index: 999;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
