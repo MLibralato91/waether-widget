@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./style.css">
+  <title>Weather Widget</title>
+</head>
+
+<body>
+  <div id="app">
+    <div class="widget">
+      <main>
+        <!-- Carousel -->
+        <div class="carousel">
+          <div class="arrow l">
+            <span style='font-size:25px;'>&lt;</span>
+          </div>
+          <!-- Pagination -->
+          <div class="pagination">
+            <span class="dot dot_1"></span>
+            <span class="dot dot_2"></span>
+            <span class="dot dot_3"></span>
+            <span class="dot dot_4"></span>
+            <span class="dot dot_5"></span>
+          </div>
+          <!-- Slides City background -->
+          <div class="slide slide_1"></div>
+          <div class="slide slide_2"></div>
+          <div class="slide slide_3"></div>
+          <div class="slide slide_4"></div>
+          <div class="slide slide_5"></div>
+
+          <div class="arrow r">
+            <span style='font-size:30px;'>&gt;</span>
+          </div>
+        </div>
+
+        <section class="main_widget">
+          <!-- Current Day -->
+          <div class="city">
+            <div class="city_name"></div>
+            <div class="weather"></div>
+            <div class="temperature"></div>
+            <div class="range_temperature"></div>
+          </div>
+
+          <!-- Section week -->
+          <div class="days">
+
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+
+</html>
