@@ -18,24 +18,24 @@ const apiKey = '3e3e2493caf89d46b38ea47b66f38caf'
 
 const cities = [
   {
-    id : 0,
-    name : 'London',
+    id: 0,
+    name: 'London',
   },
   {
-    id : 1,
-    name : 'Milan',
+    id: 1,
+    name: 'Milan',
   },
   {
-    id : 2,
-    name : 'Bangkok',
+    id: 2,
+    name: 'Bangkok',
   },
   {
-    id : 3,
-    name : 'Los%20Angeles',
+    id: 3,
+    name: 'Los%20Angeles',
   },
   {
-    id : 4,
-    name : 'Nairobi',
+    id: 4,
+    name: 'Nairobi',
   }
 ]
 
@@ -49,13 +49,13 @@ var current = 0;
 var cityName = 'london';
 
 // touch variables
-  let isDragging = false,
+let isDragging = false,
   startPos = 0,
   currentTranslate = 0,
   prevTranslate = 0,
   currentIndex = 0
 
- 
+
 
 
 // Get data and create Element
@@ -92,7 +92,7 @@ export async function getData() {
 }
 
 export function updateCityUI(data) {
-  
+
   const cityElement = document.querySelector('.city_name');
   const weatherElement = document.querySelector('.weather');
   const temperatureElement = document.querySelector('.temperature');
@@ -102,23 +102,23 @@ export function updateCityUI(data) {
   weatherElement.textContent = data.current.weather[0].main;
   temperatureElement.textContent = `${Math.round(data.current.temp)}°`;
   rangeTemperatureElement.textContent = `${Math.floor(data.daily[0].temp.min)}°/ ${Math.ceil(data.daily[0].temp.max)}°`;
-  
+
   // console.log(data.daily);
-  
+
   createDays(data);
 
 }
 
 export function createDays(data) {
   if (isCreateDaysExecuted) {
-  data.daily.slice(1, 8).map((value, i)=>{
-    const dayname = new Date(value.dt * 1000).toLocaleDateString("en", {
-      weekday: "short",
-    });
-    
-    const weatherIcon = `http://openweathermap.org/img/w/${value.weather[0].icon}.png`
+    data.daily.slice(1, 8).map((value, i) => {
+      const dayname = new Date(value.dt * 1000).toLocaleDateString("en", {
+        weekday: "short",
+      });
 
-    const day_template = `
+      const weatherIcon = `http://openweathermap.org/img/w/${value.weather[0].icon}.png`
+
+      const day_template = `
       <div class="single_day">
         <p class="name_day_${i} text_uppercase">${dayname}</p>
         <img class="weather_image_${i}" src="${weatherIcon}" alt="weather-${dayname}">
@@ -128,7 +128,7 @@ export function createDays(data) {
       const dayElement = document.createElement("div");
       dayElement.innerHTML = day_template.trim();
       days.appendChild(dayElement.firstChild);
-      
+
     })
     isCreateDaysExecuted = false;
   }
@@ -149,13 +149,7 @@ slide_container.addEventListener('touchend', touchEnd);
 slide_container.addEventListener('touchmove', touchMove);
 
 //remove event to btn
-btnRight.removeEventListener('touchstart', touchStart);
-btnRight.removeEventListener('touchend', touchEnd);
-btnRight.removeEventListener('touchmove', touchMove);
 
-btnLeft.removeEventListener('touchstart', touchStart);
-btnLeft.removeEventListener('touchend', touchEnd);
-btnLeft.removeEventListener('touchmove', touchMove);
 
 
 function touchStart(event) {
@@ -163,23 +157,27 @@ function touchStart(event) {
   isDragging = true;
 }
 
-function touchEnd() {
+function touchEnd(event) {
   isDragging = false;
   const move = currentTranslate - prevTranslate;
+  const targetElement = event.target;
+  const isArrow = targetElement.classList.contains('arrow') ||
+    targetElement.parentElement.classList.contains('arrow');
 
-  if (move > 50 && currentIndex < slide.length - 1) {
-    prevCity();
-    getData(cityName);
-    updateDays();
-  } else if (move < -50 && currentIndex > 0) {
-    nextCity();
-    getData(cityName);
-    updateDays();
+  if (!isArrow) {
+    if (move > 50 && currentIndex < slide.length - 1) {
+      prevCity();
+      getData(cityName);
+      updateDays();
+    } else if (move < -50 && currentIndex > 0) {
+      nextCity();
+      getData(cityName);
+      updateDays();
+    }
+
+    currentIndex = current;
   }
-
-  currentIndex = current;
 }
-
 function touchMove(event) {
   if (isDragging) {
     const currentPosition = event.touches[0].clientX;
@@ -188,7 +186,7 @@ function touchMove(event) {
 }
 
 // Carousel and pagination function
-function clearSlides(){
+function clearSlides() {
   for (let i = 0; i < slide.length; i++) {
     slide[i].style.display = 'none'
     dots[i].classList.remove('active')
@@ -196,10 +194,10 @@ function clearSlides(){
 
 }
 
-function nextCity(){
+function nextCity() {
   clearSlides();
 
-  if(current === slide.length-1) current = -1;
+  if (current === slide.length - 1) current = -1;
   current++;
   cityName = cities[current].name
   slide[current].style.display = 'block';
@@ -209,9 +207,9 @@ function nextCity(){
 
 }
 
-function prevCity(){
+function prevCity() {
   clearSlides();
-  if(current === 0) current = slide.length;
+  if (current === 0) current = slide.length;
   current--;
 
   cityName = cities[current].name;
@@ -222,9 +220,9 @@ function prevCity(){
   isCreateDaysExecuted = true;
 }
 
-function start(){
+function start() {
   clearSlides();
-  slide[current].style.display ='block';
+  slide[current].style.display = 'block';
   slide[current].style.opacity = '0.8';
   dots[current].classList.add('active');
 
@@ -238,11 +236,11 @@ start();
 // change city with dot
 
 dots.forEach((dot, i) => {
-  dot.addEventListener('click', function(){
+  dot.addEventListener('click', function () {
     cityName = cities[i].name
     getData(cityName);
     clearSlides();
-    slide[i].style.display ='block';
+    slide[i].style.display = 'block';
     slide[i].style.opacity = '0.8';
     dots[i].classList.add('active');
     updateDays();
@@ -252,20 +250,18 @@ dots.forEach((dot, i) => {
 
 
 // Button for change slide
-  const btnRight = document.querySelector('.arrow.r span')
-  btnRight.addEventListener('click', function(){
-    console.log(cityName);
-    nextCity();
-    getData(cityName);
-    updateDays();
-  })
+const btnRight = document.querySelector('.arrow.r span')
+btnRight.addEventListener('click', function () {
+  console.log(cityName);
+  nextCity();
+  getData(cityName);
+  updateDays();
+})
 
-  const btnLeft = document.querySelector('.arrow.l span')
-  btnLeft.addEventListener('click', function(){
-    prevCity();
-    getData (cityName)
-    updateDays();
-  })
+const btnLeft = document.querySelector('.arrow.l span')
+btnLeft.addEventListener('click', function () {
+  prevCity();
+  getData(cityName)
+  updateDays();
+})
 
-
-  
