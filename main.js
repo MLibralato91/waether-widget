@@ -97,18 +97,40 @@ export function updateCityUI(data) {
   const temperatureElement = document.querySelector('.temperature');
   const rangeTemperatureElement = document.querySelector('.range_temperature');
 
-  cityElement.textContent = decodeURIComponent(cityName);
-  weatherElement.textContent = data.current.weather[0].main;
-  temperatureElement.textContent = `${Math.round(data.current.temp)}°`;
-  rangeTemperatureElement.textContent = `${Math.floor(data.daily[0].temp.min)}°/ ${Math.ceil(data.daily[0].temp.max)}°`;
+  if (!cityElement) {
+    console.error('Elemento della città non trovato.');
+    return;
+  }
 
+  cityElement.textContent = decodeURIComponent(cityName);
+
+  if (data && data.current && data.current.weather && data.current.weather[0]) {
+    weatherElement.textContent = data.current.weather[0].main;
+  } else {
+    console.error('Struttura dati non valida per il meteo corrente.');
+    return;
+  }
+
+  if (data && data.current && data.current.temp) {
+    temperatureElement.textContent = `${Math.round(data.current.temp)}°`;
+  } else {
+    console.error('Struttura dati non valida per la temperatura corrente.');
+    return;
+  }
+
+  if (data && data.daily && data.daily[0] && data.daily[0].temp) {
+    rangeTemperatureElement.textContent = `${Math.floor(data.daily[0].temp.min)}°/ ${Math.ceil(data.daily[0].temp.max)}°`;
+  } else {
+    console.error('Struttura dati non valida per la temperatura giornaliera.');
+    return;
+  }
 
   createDays(data);
 
 }
 
 export function createDays(data) {
-  if (isCreateDaysExecuted) {
+  if (data && data.daily && isCreateDaysExecuted) {
     data.daily.slice(1, 8).map((value, i) => {
       const dayname = new Date(value.dt * 1000).toLocaleDateString("en", {
         weekday: "short",
