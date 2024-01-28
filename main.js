@@ -55,7 +55,7 @@ var cityName = 'london';
   prevTranslate = 0,
   currentIndex = 0
 
-
+ 
 
 
 // Get data and create Element
@@ -147,6 +147,16 @@ export function updateDays(data) {
 slide_container.addEventListener('touchstart', touchStart);
 slide_container.addEventListener('touchend', touchEnd);
 slide_container.addEventListener('touchmove', touchMove);
+
+//remove event to btn
+btnRight.removeEventListener('touchstart', touchStart);
+btnRight.removeEventListener('touchend', touchEnd);
+btnRight.removeEventListener('touchmove', touchMove);
+
+btnLeft.removeEventListener('touchstart', touchStart);
+btnLeft.removeEventListener('touchend', touchEnd);
+btnLeft.removeEventListener('touchmove', touchMove);
+
 
 function touchStart(event) {
   startPos = event.touches[0].clientX;
@@ -258,3 +268,4 @@ dots.forEach((dot, i) => {
   })
 
 
+  
