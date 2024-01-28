@@ -39,7 +39,7 @@ const cities = [
   }
 ]
 
-let slide_container = document.querySelector('.carousel');
+let slide_container = document.querySelector('.widget');
 let slide = document.querySelectorAll('.slide');
 let dots = document.querySelectorAll('.dot')
 const days = document.querySelector('.days');
@@ -53,7 +53,6 @@ var cityName = 'london';
   startPos = 0,
   currentTranslate = 0,
   prevTranslate = 0,
-  animationID = 0,
   currentIndex = 0
 
 
