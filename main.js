@@ -70,7 +70,6 @@ export async function getData() {
     }
 
     const cityData = await cityResponse.json();
-    console.log(cityData);
     const cityCoords = cityData.coord;
 
     const baseUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${cityCoords.lat}&lon=${cityCoords.lon}&appid=${apiKey}&units=metric`;
@@ -103,7 +102,6 @@ export function updateCityUI(data) {
   temperatureElement.textContent = `${Math.round(data.current.temp)}°`;
   rangeTemperatureElement.textContent = `${Math.floor(data.daily[0].temp.min)}°/ ${Math.ceil(data.daily[0].temp.max)}°`;
 
-  // console.log(data.daily);
 
   createDays(data);
 
@@ -252,7 +250,6 @@ dots.forEach((dot, i) => {
 // Button for change slide
 const btnRight = document.querySelector('.arrow.r span')
 btnRight.addEventListener('click', function () {
-  console.log(cityName);
   nextCity();
   getData(cityName);
   updateDays();
