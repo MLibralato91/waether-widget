@@ -40,7 +40,6 @@ let slide = document.querySelectorAll('.slide');
 let dots = document.querySelectorAll('.dot')
 const days = document.querySelector('.days');
 
-let isCreateDaysExecuted = true;
 var current = 0;
 var cityName = 'london';
 
@@ -77,7 +76,11 @@ export async function getData() {
     }
 
     const weatherData = await weatherResponse.json();
+    if (!weatherData.daily) {
+      throw new Error('Missing daily data in weather response');
+    }
     updateCityUI(weatherData);
+
     return weatherData;
   } catch (error) {
     console.error('There has been a problem with your fetch request:', error);
@@ -103,7 +106,8 @@ export function updateCityUI(data) {
 }
 
 export function createDays(data) {
-  if (isCreateDaysExecuted) {
+  days.innerHTML = '';
+  if (data && data.daily) {
     data.daily.slice(1, 8).map((value, i) => {
       const dayname = new Date(value.dt * 1000).toLocaleDateString("en", {
         weekday: "short",
@@ -123,16 +127,18 @@ export function createDays(data) {
       days.appendChild(dayElement.firstChild);
 
     })
-    isCreateDaysExecuted = false;
   }
 }
 
-
 export function updateDays(data) {
-  while (days.firstChild) {
-    days.removeChild(days.firstChild);
+  if (data && data.daily) {
+    while (days.firstChild) {
+      days.removeChild(days.firstChild);
+    }
+    if (days.innerHTML.trim() === '') {
+      createDays(data);
+    }
   }
-  createDays(data);
 }
 
 // Touch slider function
@@ -140,8 +146,6 @@ export function updateDays(data) {
 slide_container.addEventListener('touchstart', touchStart);
 slide_container.addEventListener('touchend', touchEnd);
 slide_container.addEventListener('touchmove', touchMove);
-
-//remove event to btn
 
 
 
@@ -157,6 +161,7 @@ function touchEnd(event) {
   const isArrow = targetElement.classList.contains('arrow') ||
     targetElement.parentElement.classList.contains('arrow');
 
+
   if (!isArrow) {
     if (move > 50 && currentIndex < slide.length - 1) {
       prevCity();
@@ -171,6 +176,7 @@ function touchEnd(event) {
     currentIndex = current;
   }
 }
+
 function touchMove(event) {
   if (isDragging) {
     const currentPosition = event.touches[0].clientX;
@@ -190,27 +196,33 @@ function clearSlides() {
 function nextCity() {
   clearSlides();
 
-  if (current === slide.length - 1) current = -1;
-  current++;
+  if (current === slide.length - 1) {
+    current = 0;
+  } else {
+    current++;
+  }
+
+  currentIndex = current;
   cityName = cities[current].name
   slide[current].style.display = 'block';
   slide[current].style.opacity = '0.7';
   dots[current].classList.add('active');
-  isCreateDaysExecuted = true;
 
 }
 
 function prevCity() {
   clearSlides();
-  if (current === 0) current = slide.length;
-  current--;
-
+  if (current === 0) {
+    current = slide.length - 1;
+  } else {
+    current--;
+  }
+  currentIndex = current;
   cityName = cities[current].name;
   slide[current].style.display = 'block';
   slide[current].style.opacity = '0.7';
   dots[current].classList.add('active');
 
-  isCreateDaysExecuted = true;
 }
 
 function start() {
@@ -221,8 +233,6 @@ function start() {
 
 
 }
-
-
 // Init the the first slide
 start();
 
